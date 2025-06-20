@@ -1,6 +1,7 @@
 import {useState} from "react";
 import WeatherCard from "./components/WeatherCard";
 import Forecast from "./components/Forecast";
+import axios from "axios";
 
 const API_KEY = '2c0bef5d13d81b46231ccb42f7ea3516';
 
@@ -12,20 +13,17 @@ function App() {
 
   const fetchWeather = async () => {
     try {
-      const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`);
-      if (!res.ok) throw new Error('City not found');
-      const data = await res.json();
-      setWeather(data);
+      const res = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`);
+      if (res.statusText !== 'OK') throw new Error('City not found');
+      setWeather(res.data);
 
 
       // Fetch forecast
-      const forecastRes = await fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric`
-      );
-      const forecastData = await forecastRes.json();
+      const forecastRes = await axios.get(
+        `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric`);
 
       // Filter forecast: 12:00:00 entries only
-      const daily = forecastData.list.filter(item =>
+      const daily = forecastRes.data.list.filter(item =>
         item.dt_txt.includes('12:00:00')
       );
       setForecast(daily);
