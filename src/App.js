@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import WeatherCard from "./components/WeatherCard";
 import Forecast from "./components/Forecast";
 import axios from "axios";
@@ -13,21 +13,19 @@ function App() {
   const [forecast, setForecast] = useState([]);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetchWeather();
-  }, []);
 
 
-  const fetchWeather = async () => {
+
+  const fetchWeather = useCallback( async (cityName) => {
     try {
-      const res = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`);
+      const res = await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}&units=metric`);
       if (res.statusText !== 'OK') throw new Error('City not found');
       setWeather(res.data);
 
 
       // Fetch forecast
       const forecastRes = await axios.get(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}&units=metric`);
+        `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${API_KEY}&units=metric`);
 
       // Filter forecast: 12:00:00 entries only
       const daily = forecastRes.data.list.filter(item =>
@@ -43,11 +41,16 @@ function App() {
     } finally {
       setLoading(false); // loader off
     }
-  }
+  }, []);
+
+   // Initial load only
+  useEffect(() => {
+    fetchWeather('Dhaka');
+  }, [fetchWeather]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(city) fetchWeather();
+    if(city) fetchWeather(city);
   }
 
   return (
