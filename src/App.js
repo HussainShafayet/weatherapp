@@ -7,8 +7,10 @@ const API_KEY = '2c0bef5d13d81b46231ccb42f7ea3516';
 
 function App() {
   const [city, setCity] = useState('dhaka');
+  const [loading, setLoading] = useState(false);
+
   const [weather, setWeather] = useState(null);
-    const [forecast, setForecast] = useState([]);
+  const [forecast, setForecast] = useState([]);
   const [error, setError] = useState('');
 
   const fetchWeather = async () => {
@@ -33,6 +35,8 @@ function App() {
       setError(error.message);
       setWeather(null);
       setForecast([]);
+    } finally {
+      setLoading(false); // loader off
     }
   }
   useEffect(() => {
@@ -62,10 +66,19 @@ function App() {
           Search
         </button>
       </form>
+      {loading ? (
+        <div className="flex justify-center items-center h-40">
+          <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500"></div>
+        </div>
+      ) : (
+        <>
+          {error && <p className="text-red-600">{error}</p>}
+          {weather && <WeatherCard data={weather} />}
+          {forecast.length > 0 && <Forecast data={forecast} />}
+        </>
+      )}
 
-      {error && <p className="text-red-600">{error}</p>}
-      {weather && <WeatherCard data={weather} />}
-      {forecast.length > 0 && <Forecast data={forecast} />}
+      
     </div>
   );
 }
