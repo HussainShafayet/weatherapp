@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import WeatherCard from "./components/WeatherCard";
 import Forecast from "./components/Forecast";
 import axios from "axios";
@@ -35,6 +35,11 @@ function App() {
       setForecast([]);
     }
   }
+  useEffect(() => {
+    return () => {
+      fetchWeather();
+    };
+  })
 
   const handleSubmit = (e) => {
     e.preventDefault();
