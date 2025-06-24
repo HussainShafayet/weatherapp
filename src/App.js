@@ -6,12 +6,17 @@ import axios from "axios";
 const API_KEY = '2c0bef5d13d81b46231ccb42f7ea3516';
 
 function App() {
-  const [city, setCity] = useState('dhaka');
+  const [city, setCity] = useState('Dhaka');
   const [loading, setLoading] = useState(false);
 
   const [weather, setWeather] = useState(null);
   const [forecast, setForecast] = useState([]);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    fetchWeather();
+  }, []);
+
 
   const fetchWeather = async () => {
     try {
@@ -39,11 +44,6 @@ function App() {
       setLoading(false); // loader off
     }
   }
-  useEffect(() => {
-    return () => {
-      fetchWeather();
-    };
-  })
 
   const handleSubmit = (e) => {
     e.preventDefault();
