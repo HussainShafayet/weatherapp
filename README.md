@@ -2,6 +2,10 @@
 
 A simple React-based weather application to fetch and display weather data using Axios. Styled with Tailwind CSS.
 
+## 🚀 Live Demo
+
+[👉 Click here to view the live app](https://weatherdekhben.netlify.app/)
+
 ## 🚀 Features
 
 - Get real-time weather data using an API (Axios)
